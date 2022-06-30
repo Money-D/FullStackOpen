@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import personService from './services/persons'
 
 const App = () => {
@@ -47,10 +46,17 @@ const App = () => {
         name: newName,
         number: newNumber
       }
-      personService.create(newPerson)
+      personService
+      .create(newPerson)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setNotification(`Added ${newName}`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 3000)
+        })
+        .catch(error => {
+          setNotification(error.response.data.error)
           setTimeout(() => {
             setNotification(null)
           }, 3000)
@@ -115,7 +121,6 @@ const Persons = ({ persons, setPersons }) =>
                 setPersons(returnedPersons)
               })
           }
-
         }}
       />)}
   </>
